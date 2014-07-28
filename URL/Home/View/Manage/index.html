@@ -1,0 +1,186 @@
+<?php if(!isset($_COOKIE['LOGIN'])) die(header("Location:__APP__/User"))?>
+<!DOCTYPE html>
+<include file="Public/head" title="管理"/>
+<include file="Public/navbar" nav-manage="active" />
+<script>
+    function editTagByID(tid)
+    {
+        $.get("__APP__/Manage/getTag",{'tid':tid},function(data){
+            $('#InputTag').val(data);
+            $('#InputTid').val(tid);
+            $('#editTag').modal('toggle');
+        })
+    }
+
+    function deleteTagByID(tid){
+        if(confirm('删除该标签将会删除标签下所有书签，确定删除？'))
+            window.location.href="__APP__/Manage/deleteTag/tid/"+tid;
+    }
+
+    function updateTag() {
+        var tag = $('#InputTag').val();
+        var tid = $('#InputTid').val();
+        $.post("__APP__/Manage/updateTag",{'tid':tid,'tag':tag},function(data){
+            if(data == 'OK')
+              location.reload();
+        })
+        $('#editTag').modal('toggle');
+    }    
+
+    function editUrlByID(uid) {
+      $.getJSON("__APP__/Manage/getUrl",{'uid':uid},function(url){
+         $('#InputTitle').val(url.title);
+         $('#InputUrl').val(url.url);
+         $('#InputUid').val(url.uid);
+         $('#InputDescription').val(url.description);
+      })
+      $('#editUrl').modal('toggle');
+    }
+
+    function deleteUrlByID(uid) {
+      if(!confirm('删除该标签将会删除标签下所有书签，确定删除？')) return;
+      $.get("__APP__/Manage/deleteUrl",{'uid':uid},function(data){
+        if(data == 'OK')
+          location.reload();
+      })
+    }    
+
+    function MoveUrlByID(uid) {
+      $('#MoveUid').val(uid);
+      $('#moveUrl').modal('toggle');
+    }
+
+    function updateUrl() {
+      var uid   = $('#InputUid').val();
+      var title = $('#InputTitle').val();
+      var url   = $('#InputUrl').val();
+      var description = $('#InputDescription').val();
+      $.post("__APP__/Manage/updateUrl",{'uid':uid,'title':title,'url':url,'description':description},function(data){
+        if(data == 'OK')
+          location.reload();
+      })
+      $('#editTag').modal('toggle');
+    }
+
+    function MoveUrl(){
+      var tid = $('#SelectedTid').val();
+      var uid = $('#MoveUid').val();
+      $.post("__APP__/Manage/MoveUrl",{'uid':uid,'tid':tid},function(data){
+        if(data == 'OK')
+          location.reload();
+      })
+      $('#editTag').modal('toggle');
+    }
+</script>
+      <div class="main">
+        <div class="container">
+            <div class="panel panel-info">
+                <div class="panel-heading">标签</div>
+                <div class="panel-body">
+                    <foreach name="Tags" item="T">
+                        <div class="btn-group" style="margin-right:10px;margin-bottom:10px">
+                          <a href="__APP__/Manage/index/tid/{$T.tid}" class='btn <if condition="$T.tag eq $tag">btn-primary<else/>btn-info</if>'>{$T.tag}</a>
+                          <button type="button" class='btn <if condition="$T.tag eq $tag">btn-primary<else/>btn-info</if> dropdown-toggle' data-toggle="dropdown">
+                            <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu" role="menu">
+                            <li><a href="javascript:void(0)" onClick="editTagByID({$T.tid})">编辑</a></li>
+                            <li><a href="javascript:void(0)" onClick="deleteTagByID({$T.tid})">删除</a></li>
+                          </ul>
+                        </div>
+                    </foreach>
+                </div>
+            </div>
+
+            <div class="panel panel-info">
+              <div class="panel-heading">{$tag}</div>
+              <div class="panel-body">
+                  <foreach name="Url" item="U">
+                        <a href="{$U.url}" target="_blank" title="{$U.description}">{$U.title}
+                        <span class="pull-right">
+                          <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-default" onClick="editUrlByID({$U.uid});return false">编辑</button>
+                            <button type="button" class="btn btn-default" onClick="MoveUrlByID({$U.uid});return false">移动</button>
+                            <button type="button" class="btn btn-danger"  onClick="deleteUrlByID({$U.uid});return false">删除</button>
+                          </div>
+                        </span>
+                        </a><hr>
+                      <span class="clearfix"></span>
+                  </foreach>
+              </div>
+              <div class="panel-footer"><a href="__APP__/Add">添加一条新记录</a></div>
+            </div>
+
+            <!--编辑标签弹出对话框-->
+            <form onSubmit="updateTag();return false">
+              <div class="modal fade" id="editTag" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" tabindex="-1" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title">编辑标签</h4>
+                    </div>
+                    <div class="modal-body">
+                      <input type="text" class="form-control" id="InputTag" tabindex="0" placeholder="输入新标签名">
+                      <input type="hidden" type="text" id="InputTid" value="">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <input type="submit" class="btn btn-primary" value="确定">
+                    </div>
+                  </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+              </div><!-- /.modal -->
+            </form>
+
+            <!--编辑书签弹出对话框-->
+            <form onSubmit="updateUrl();return false">
+            <div class="modal fade" id="editUrl" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" tabindex="-1" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">编辑书签</h4>
+                  </div>
+                  <div class="modal-body">
+                    <input type="text" class="form-control" id="InputTitle" tabindex="0" placeholder="输入新书签名"><br>
+                    <input type="text" class="form-control" id="InputUrl" tabindex="1" placeholder="输入新URL"><br>
+                    <textarea class="form-control" rows="3" id="InputDescription" placeholder="网站描述"></textarea>
+                    <input type="hidden" type="text" id="InputUid" value="">
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                      <input type="submit" class="btn btn-primary" value="确定">
+                  </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            </form>
+
+            <!--移动书签弹出对话框-->
+            <form onSubmit="MoveUrl();return false">
+              <div class="modal fade" id="moveUrl" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" tabindex="-1" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title">移动书签</h4>
+                    </div>
+                    <div class="modal-body">
+                      <select class="form-control" id="SelectedTid">
+                          <foreach name="Tags" item="T"><option value="{$T.tid}">{$T.tag}</option></foreach>
+                      </select>
+                      <input type="hidden" type="text" id="MoveUid" value="">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <input type="submit" class="btn btn-primary" value="确定">
+                    </div>
+                  </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+              </div><!-- /.modal -->
+            </form>
+        </div>
+      <include file="Public/footer"/>
+      </div>
+<include file="Public/foot"/>

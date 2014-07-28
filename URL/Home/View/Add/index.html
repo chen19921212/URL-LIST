@@ -1,0 +1,47 @@
+<?php if(!isset($_COOKIE['LOGIN'])) die(header("Location:__APP__/User"))?>
+<!DOCTYPE html>
+<include file="Public/head" title="{$Think.config.APP_NAME} | 添加书签"/>
+<include file="Public/navbar" nav-add="active" />
+        <div class="main">
+        <div class="container">
+            <div class="panel panel-info">
+                <div class="panel-heading">添加新书签</div>
+                <div class="panel-body">
+                    <form action="__APP__/Add/addUrl" method="POST" onSubmit="return InputCheckUrl(this)">
+
+                        <div class="input-group">
+                            <span class="input-group-addon">标&nbsp;&nbsp;题</span>
+                            <input type="text" class="form-control" placeholder="书签名称" name="title">
+                        </div><br>
+                       
+                        <div class="input-group">
+                            <span class="input-group-addon">http://</span>
+                            <input type="text" class="form-control" placeholder="网址" name="url">
+                        </div><br>
+                        <textarea class="form-control" rows="3" name="description" placeholder="网站描述"></textarea><br>
+                        <select class="form-control" name="tid">
+                            <foreach name="Tags" item="T">
+                                <option value="{$T.tid}" <if condition="$T.tid eq $tid">selected</if>>{$T.tag}</option>
+                            </foreach>
+                        </select><br>
+                        <input type="submit" class="btn btn-success pull-right" value="添加书签">
+                    </form>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">添加新标签</div>
+                <div class="panel-body">
+                    <form action="__APP__/Add/addTag" method="POST" onSubmit="return InputCheckTag(this)">
+                        <div class="input-group">
+                          <input type="text" class="form-control" placeholder="请输入标签名" name="tag">
+                          <span class="input-group-btn">
+                            <input class="btn btn-default" type="submit" value="添加标签"/>
+                          </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <include file="Public/footer"/>
+        </div>
+<include file="Public/foot"/>

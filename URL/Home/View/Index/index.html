@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<include file="Public/head" title="{$Think.config.APP_NAME} | {$Think.config.ABOUT}书签列表"/>
+<include file="Public/navbar"/>
+        <div class="main">
+            <div class="container">
+                <div class="panel panel-info">
+                    <div class="panel-heading">标签</div>
+                    <div class="panel-body">
+                        <foreach name="Tags" item="T">
+                            <span class="tags"><a href="__APP__/Index/index/tid/{$T.tid}" class='btn <if condition="$T.tag eq $tag">btn-primary<else/>btn-info</if>' role="button">{$T.tag}</a></span>
+                        </foreach>
+                    </div>
+                </div>
+                <div class="panel panel-info">
+                    <div class="panel-heading">{$tag}</div>
+                    <div class="panel-body">
+                        <foreach name="Url" item="U">
+                            <a class="list-group-item" href="{$U.url}" target="_blank" title="{$U.description}">{$U.title}</a>
+                        </foreach>
+                    </div>
+                    <div class="panel-footer"><a href="__APP__/Add">添加一条新记录</a></div>
+                </div>
+            </div>
+            <include file="Public/footer"/>
+        </div>
+<include file="Public/foot"/>

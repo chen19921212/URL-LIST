@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<include file="Public/head" title="{$Think.config.APP_NAME} | 搜索结果"/>
+<include file="Public/navbar"/>
+        <div class="main">
+        <div class="container">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="alert alert-info">共  <strong>{$count}</strong>  条搜索结果</div>
+                    <foreach name="Url" item="U">
+                        <a class="list-group-item" href="{$U.url}" target="_blank" title="{$U.description}">
+                            <span style="color:#5cb85c">{$U.tag}</span> > {$U.title}
+                        </a><br>
+                    </foreach>
+                </div>
+            </div>
+        </div>
+        <include file="Public/footer"/>
+        </div>
+<include file="Public/foot"/>

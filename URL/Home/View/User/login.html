@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<include file="Public/head" title="用户登录验证"/>
+<include file="Public/navbar" nav-login="active"/>
+<script>
+    $(document).ready(
+      function(){
+        showdlg();
+    })
+
+    function showdlg(){
+          $('#LoginDlg').modal('toggle');
+    }
+
+    function login(){
+      var passwd = $('#InputPassword').val();
+      if(passwd == "") {
+        $('#InputPassword').focus();
+        return (false);
+      }
+      $.post('__APP__/User/login',{password:passwd},function(data){
+          if(data == 'OK')
+            location.href='__APP__/Add';
+          else
+            $('#InputPassword').val('');
+      });
+      showdlg();
+    }
+</script>
+        <div class="main">
+        <div class="container">
+            <div class="panel panel-info">
+                <div class="panel-heading"><a href="__APP__/">← 回首页（只有管理员才可以管理）</a></div>
+            </div>
+            <form onSubmit="login();return false">
+              <div class="modal fade" id="LoginDlg" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title">请输入密码：</h4>
+                    </div>
+                    <div class="modal-body">
+                      <input type="password" class="form-control" id="InputPassword" placeholder="管理员密码">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <input type="submit" class="btn btn-primary" value="确定">
+                    </div>
+                  </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+              </div><!-- /.modal -->
+            </form>
+            <div class="jumbotron">
+              <h1>URL LIST</h1>
+              <p>简洁是智慧的灵魂，冗长是肤浅的藻饰</p>
+              <p><button class="btn btn-primary btn-lg" role="button" onClick="showdlg();return false" data-toggle="modal">登录</button></p>
+            </div>
+        </div>
+        <include file="Public/footer"/>
+        </div>
+
+<include file="Public/foot"/>

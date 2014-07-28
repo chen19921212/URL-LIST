@@ -1,0 +1,38 @@
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" >
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#nav-bar-item">
+                        <span class="sr-only"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="__APP__/" class="navbar-brand">{$Think.config.APP_NAME}</a>
+                </div>
+                <div class="collapse navbar-collapse" id="nav-bar-item">
+                    <!--搜索框-->
+                    <ul class="nav navbar-nav">
+                        <li><a href="javascript:void(0)"onClick='showSearch();'>搜索</a></li>
+                    </ul>
+                    <form class="navbar-form navbar-left" role="search" action="__APP__/Search" method="GET" id="search" style="display:none;">
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search" name="keyword" onBlur="showSearch()">
+                      </div>
+                    </form>
+                    <!--右侧导航-->
+                    <ul class="nav navbar-nav navbar-right">
+                        <?php
+                            if(isset($_COOKIE['LOGIN']))
+                            {
+                                echo '<li class="[nav-add]"><a href="__APP__/Add">&nbsp;╋&nbsp;</a></li>';
+                                echo '<li class="[nav-manage]"><a href="__APP__/Manage">管理</a></li>';
+                                echo '<li><a href="__APP__/User/logout">退出</a></li>';
+                            }
+                            else
+                                echo '<li class="[nav-login]"><a href="__APP__/User">登录</a></li>';
+                            echo '<li class="[nav-about]"><a href="__APP__/About">关于</a></li>';
+                        ?>
+                    </ul>
+                </div>
+            </div>
+        </nav>
